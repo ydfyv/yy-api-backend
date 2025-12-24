@@ -49,12 +49,12 @@ public class InterfaceInfoEditRequest implements Serializable {
     /**
      * 状态（0-关闭，1-开启）
      */
-    private Integer status;
+    private String status;
 
     /**
      * 请求方法
      */
-    private Integer method;
+    private String method;
 
     private static final long serialVersionUID = 1L;
 }

@@ -39,12 +39,12 @@ public class InterfaceInfoQueryRequest extends PageRequest implements Serializab
     /**
      * 状态（0-关闭，1-开启）
      */
-    private Integer status;
+    private String status;
 
     /**
      * 请求方法
      */
-    private Integer method;
+    private String method;
 
     /**
      * 创建用户 id

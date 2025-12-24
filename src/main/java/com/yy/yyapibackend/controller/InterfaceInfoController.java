@@ -20,6 +20,7 @@ import com.yy.yyapibackend.model.vo.InterfaceInfoVO;
 import com.yy.yyapibackend.service.InterfaceInfoService;
 import com.yy.yyapibackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -208,8 +209,8 @@ public class InterfaceInfoController {
      */
     @PostMapping("/edit")
     public BaseResponse<Boolean> editInterfaceInfo(@RequestBody InterfaceInfoEditRequest interfaceInfoEditRequest, HttpServletRequest request) {
-        if (interfaceInfoEditRequest == null || interfaceInfoEditRequest.getId() <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        if (interfaceInfoEditRequest == null || ObjectUtils.requireNonEmpty(interfaceInfoEditRequest.getId(), "id为空！") <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数异常！");
         }
         InterfaceInfo interfaceInfo = new InterfaceInfo();
         BeanUtils.copyProperties(interfaceInfoEditRequest, interfaceInfo);

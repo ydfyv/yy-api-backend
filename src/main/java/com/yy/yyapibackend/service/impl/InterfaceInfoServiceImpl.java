@@ -70,8 +70,8 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         String name = interfaceInfoQueryRequest.getName();
         String description = interfaceInfoQueryRequest.getDescription();
         String url = interfaceInfoQueryRequest.getUrl();
-        Integer status = interfaceInfoQueryRequest.getStatus();
-        Integer method = interfaceInfoQueryRequest.getMethod();
+        String status = interfaceInfoQueryRequest.getStatus();
+        String method = interfaceInfoQueryRequest.getMethod();
         Long userId = interfaceInfoQueryRequest.getUserId();
         String sortField = interfaceInfoQueryRequest.getSortField();
         String sortOrder = interfaceInfoQueryRequest.getSortOrder();
