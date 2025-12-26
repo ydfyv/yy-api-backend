@@ -1,15 +1,16 @@
 package com.yy.yyapibackend.common;
 
-import java.io.Serializable;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
- * 删除请求
+ * Id请求
  *
  * @author 阿狸
  */
 @Data
-public class DeleteRequest implements Serializable {
+public class IdRequest implements Serializable {
 
     /**
      * id

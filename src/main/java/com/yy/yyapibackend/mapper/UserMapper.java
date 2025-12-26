@@ -6,8 +6,7 @@ import com.yy.yyapibackend.model.entity.User;
 /**
  * 用户数据库操作
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author 阿狸
  */
 public interface UserMapper extends BaseMapper<User> {
 

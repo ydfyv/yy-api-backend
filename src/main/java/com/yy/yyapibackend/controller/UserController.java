@@ -2,10 +2,7 @@ package com.yy.yyapibackend.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yy.yyapibackend.annotation.AuthCheck;
-import com.yy.yyapibackend.common.BaseResponse;
-import com.yy.yyapibackend.common.DeleteRequest;
-import com.yy.yyapibackend.common.ErrorCode;
-import com.yy.yyapibackend.common.ResultUtils;
+import com.yy.yyapibackend.common.*;
 import com.yy.yyapibackend.config.WxOpenConfig;
 import com.yy.yyapibackend.constant.UserConstant;
 import com.yy.yyapibackend.exception.BusinessException;
@@ -45,8 +42,7 @@ import static com.yy.yyapibackend.service.impl.UserServiceImpl.SALT;
 /**
  * 用户接口
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author 阿狸
  */
 @RestController
 @RequestMapping("/user")
@@ -315,6 +311,21 @@ public class UserController {
         user.setId(loginUser.getId());
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return ResultUtils.success(true);
+    }
+
+    /**
+     * 更新个人密钥
+     *
+     * @param idRequest
+     * @return
+     */
+    @PostMapping("/update/secretKey")
+    public BaseResponse<Boolean> updateSecretKey(@RequestBody IdRequest idRequest) {
+        if (idRequest == null || idRequest.getId() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        userService.updateSecretKey(idRequest.getId());
         return ResultUtils.success(true);
     }
 }

@@ -6,9 +6,7 @@ import lombok.Data;
 
 /**
  * 已登录用户视图（脱敏）
- *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author 阿狸
  **/
 @Data
 public class LoginUserVO implements Serializable {
@@ -37,6 +35,17 @@ public class LoginUserVO implements Serializable {
      * 用户角色：user/admin/ban
      */
     private String userRole;
+
+    /**
+     * 访问凭证
+     */
+    private String accessKey;
+
+    /**
+     * 访问凭证
+     */
+    private String secretKey;
+
 
     /**
      * 创建时间

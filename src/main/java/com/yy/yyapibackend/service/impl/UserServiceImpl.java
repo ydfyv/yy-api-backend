@@ -3,11 +3,15 @@ package com.yy.yyapibackend.service.impl;
 import static com.yy.yyapibackend.constant.UserConstant.USER_LOGIN_STATE;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.digest.DigestAlgorithm;
+import cn.hutool.crypto.digest.Digester;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yy.yyapibackend.common.ErrorCode;
 import com.yy.yyapibackend.constant.CommonConstant;
 import com.yy.yyapibackend.exception.BusinessException;
+import com.yy.yyapibackend.exception.ThrowUtils;
 import com.yy.yyapibackend.mapper.UserMapper;
 import com.yy.yyapibackend.model.dto.user.UserQueryRequest;
 import com.yy.yyapibackend.model.entity.User;
@@ -30,8 +34,7 @@ import org.springframework.util.DigestUtils;
 /**
  * 用户服务实现
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author 阿狸
  */
 @Service
 @Slf4j
@@ -40,7 +43,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 盐值，混淆密码
      */
-    public static final String SALT = "yupi";
+    public static final String SALT = "yy";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -68,10 +71,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
             // 2. 加密
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
-            // 3. 插入数据
+            // 3.生成ak sk
+            Digester digester = new Digester(DigestAlgorithm.MD5);
+            String accessKey = digester.digestHex(SALT + userAccount + RandomUtil.randomNumbers(4));
+            String secretKey = digester.digestHex(SALT + userAccount + RandomUtil.randomNumbers(8));
+            // 4. 插入数据
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
+            user.setAccessKey(accessKey);
+            user.setSecretKey(secretKey);
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
@@ -268,5 +277,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
         return queryWrapper;
+    }
+
+    @Override
+    public void updateSecretKey(Long id) {
+        User user = getById(id);
+        String userAccount = user.getUserAccount();
+        Digester digester = new Digester(DigestAlgorithm.MD5);
+        String accessKey = digester.digestHex(SALT + userAccount + RandomUtil.randomNumbers(4));
+        String secretKey = digester.digestHex(SALT + userAccount + RandomUtil.randomNumbers(8));
+        // 更新数据库
+        user.setAccessKey(accessKey);
+        user.setSecretKey(secretKey);
+        boolean result = updateById(user);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
     }
 }

@@ -6,15 +6,15 @@ import com.yy.yyapibackend.model.dto.user.UserQueryRequest;
 import com.yy.yyapibackend.model.entity.User;
 import com.yy.yyapibackend.model.vo.LoginUserVO;
 import com.yy.yyapibackend.model.vo.UserVO;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户服务
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author 阿狸
  */
 public interface UserService extends IService<User> {
 
@@ -117,5 +117,7 @@ public interface UserService extends IService<User> {
      * @return
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
+
+    void updateSecretKey(Long id);
 
 }
