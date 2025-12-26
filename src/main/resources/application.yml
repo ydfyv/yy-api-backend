@@ -99,3 +99,7 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.yy.yyapibackend.controller
+yyapi:
+  client:
+    accessKey: 7fbd0ed36482f8f4abf19061e3b995ac
+    secretKey: 111bd3c9d96caf079ba183f095ef091d

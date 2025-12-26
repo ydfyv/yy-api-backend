@@ -1,12 +1,8 @@
 package com.yy.yyapibackend.controller;
 
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yy.yyapibackend.annotation.AuthCheck;
-import com.yy.yyapibackend.common.BaseResponse;
-import com.yy.yyapibackend.common.DeleteRequest;
-import com.yy.yyapibackend.common.ErrorCode;
-import com.yy.yyapibackend.common.ResultUtils;
+import com.yy.yyapibackend.common.*;
 import com.yy.yyapibackend.constant.UserConstant;
 import com.yy.yyapibackend.exception.BusinessException;
 import com.yy.yyapibackend.exception.ThrowUtils;
@@ -16,6 +12,7 @@ import com.yy.yyapibackend.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
 import com.yy.yyapibackend.model.dto.interfaceInfo.InterfaceInfoUpdateRequest;
 import com.yy.yyapibackend.model.entity.InterfaceInfo;
 import com.yy.yyapibackend.model.entity.User;
+import com.yy.yyapibackend.model.enums.InterfaceStatusEnum;
 import com.yy.yyapibackend.model.vo.InterfaceInfoVO;
 import com.yy.yyapibackend.service.InterfaceInfoService;
 import com.yy.yyapibackend.service.UserService;
@@ -229,4 +226,54 @@ public class InterfaceInfoController {
         return ResultUtils.success(result);
     }
 
+
+    /**
+     * 接口上线（仅管理员）
+     *
+     * @param idRequest
+     * @return
+     */
+    @PostMapping("/online")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> online(@RequestBody IdRequest idRequest) {
+        if (idRequest == null || idRequest.getId() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        long id = idRequest.getId();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
+        // 检查接口是否可访问
+        interfaceInfoService.validateAcessible(oldInterfaceInfo);
+        // 上线
+        oldInterfaceInfo.setStatus(InterfaceStatusEnum.ONLINE.getValue());
+
+        boolean result = interfaceInfoService.updateById(oldInterfaceInfo);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 接口下线（仅管理员）
+     *
+     * @param idRequest
+     * @return
+     */
+    @PostMapping("/offline")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> offline(@RequestBody IdRequest idRequest) {
+        if (idRequest == null || idRequest.getId() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        long id = idRequest.getId();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
+        // 下线
+        oldInterfaceInfo.setStatus(InterfaceStatusEnum.OFFLINE.getValue());
+
+        boolean result = interfaceInfoService.updateById(oldInterfaceInfo);
+        return ResultUtils.success(result);
+    }
 }

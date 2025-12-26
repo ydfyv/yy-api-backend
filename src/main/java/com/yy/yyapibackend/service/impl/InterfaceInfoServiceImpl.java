@@ -16,6 +16,7 @@ import com.yy.yyapibackend.service.InterfaceInfoService;
 import com.yy.yyapibackend.mapper.InterfaceInfoMapper;
 import com.yy.yyapibackend.service.UserService;
 import com.yy.yyapibackend.utils.SqlUtils;
+import com.yy.yyapiclientsdk.client.YyApiClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private YyApiClient yyApiClient;
 
     @Override
     public void validInterfaceInfo(InterfaceInfo interfaceInfo) {
@@ -130,6 +134,24 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         }).collect(Collectors.toList());
         interfaceInfoVOPage.setRecords(interfaceInfoVOList);
         return interfaceInfoVOPage;
+    }
+
+    @Override
+    public void validateAcessible(InterfaceInfo interfaceInfo) {
+        // TODO: 根据数据库中的url、method、requestHeader、responseHeader等信息，进行访问校验
+        String url = interfaceInfo.getUrl();
+        String requestHeader = interfaceInfo.getRequestHeader();
+        String responseHeader = interfaceInfo.getResponseHeader();
+        String status = interfaceInfo.getStatus();
+        String method = interfaceInfo.getMethod();
+
+        com.yy.yyapiclientsdk.model.User user = new com.yy.yyapiclientsdk.model.User();
+        user.setName("yy");
+
+        String response = yyApiClient.getNameByPost(user);
+
+        System.out.println("response: " + response);
+
     }
 }
 

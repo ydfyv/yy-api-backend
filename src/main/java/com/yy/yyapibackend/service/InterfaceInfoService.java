@@ -21,4 +21,6 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
     Wrapper<InterfaceInfo> getQueryWrapper(InterfaceInfoQueryRequest interfaceInfoQueryRequest);
 
     Page<InterfaceInfoVO> getInterfaceInfoVOPage(Page<InterfaceInfo> interfaceInfoPage, HttpServletRequest request);
+
+    void validateAcessible(InterfaceInfo interfaceInfo);
 }
