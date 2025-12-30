@@ -1,6 +1,7 @@
 package com.yy.yyapibackend.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
 import com.yy.yyapibackend.annotation.AuthCheck;
 import com.yy.yyapibackend.common.*;
 import com.yy.yyapibackend.constant.UserConstant;
@@ -16,6 +17,7 @@ import com.yy.yyapibackend.model.enums.InterfaceStatusEnum;
 import com.yy.yyapibackend.model.vo.InterfaceInfoVO;
 import com.yy.yyapibackend.service.InterfaceInfoService;
 import com.yy.yyapibackend.service.UserService;
+import com.yy.yyapiclientsdk.client.YyApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
@@ -39,6 +41,9 @@ public class InterfaceInfoController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private YyApiClient yyApiClient;
 
     // region 增删改查
 
@@ -245,7 +250,7 @@ public class InterfaceInfoController {
         InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
         ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
         // 检查接口是否可访问
-        interfaceInfoService.validateAcessible(oldInterfaceInfo);
+        interfaceInfoService.validateAccessible(oldInterfaceInfo);
         // 上线
         oldInterfaceInfo.setStatus(InterfaceStatusEnum.ONLINE.getValue());
 
@@ -274,6 +279,26 @@ public class InterfaceInfoController {
         oldInterfaceInfo.setStatus(InterfaceStatusEnum.OFFLINE.getValue());
 
         boolean result = interfaceInfoService.updateById(oldInterfaceInfo);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 调试接口
+     *
+     * @param jsonStr
+     * @return
+     */
+    @PostMapping("/debugInterface")
+    @AuthCheck(mustRole = UserConstant.USER_LOGIN_STATE)
+    public BaseResponse<String> debugInterface(@RequestBody String jsonStr) {
+        if (jsonStr == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        Gson gson = new Gson();
+        com.yy.yyapiclientsdk.model.User user = gson.fromJson(jsonStr, com.yy.yyapiclientsdk.model.User.class);
+        String result = yyApiClient.getNameByPost(user);
+
         return ResultUtils.success(result);
     }
 }

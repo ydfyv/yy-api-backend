@@ -22,5 +22,5 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
 
     Page<InterfaceInfoVO> getInterfaceInfoVOPage(Page<InterfaceInfo> interfaceInfoPage, HttpServletRequest request);
 
-    void validateAcessible(InterfaceInfo interfaceInfo);
+    void validateAccessible(InterfaceInfo interfaceInfo);
 }

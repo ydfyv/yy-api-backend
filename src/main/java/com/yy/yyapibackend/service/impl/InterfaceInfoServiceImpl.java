@@ -137,7 +137,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
     }
 
     @Override
-    public void validateAcessible(InterfaceInfo interfaceInfo) {
+    public void validateAccessible(InterfaceInfo interfaceInfo) {
         // TODO: 根据数据库中的url、method、requestHeader、responseHeader等信息，进行访问校验
         String url = interfaceInfo.getUrl();
         String requestHeader = interfaceInfo.getRequestHeader();
