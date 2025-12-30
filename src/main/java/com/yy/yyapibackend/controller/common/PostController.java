@@ -1,4 +1,4 @@
-package com.yy.yyapibackend.controller;
+package com.yy.yyapibackend.controller.common;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

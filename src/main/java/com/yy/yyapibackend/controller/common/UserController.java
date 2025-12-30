@@ -1,4 +1,4 @@
-package com.yy.yyapibackend.controller;
+package com.yy.yyapibackend.controller.common;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yy.yyapibackend.annotation.AuthCheck;

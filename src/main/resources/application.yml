@@ -95,10 +95,14 @@ knife4j:
     title: "接口文档"
     version: 1.0
     group:
+      api:
+        api-rule: package
+        api-rule-resources:
+          - com.yy.yyapibackend.controller.api
       default:
         api-rule: package
         api-rule-resources:
-          - com.yy.yyapibackend.controller
+          - com.yy.yyapibackend.controller.common
 yyapi:
   client:
     accessKey: 7fbd0ed36482f8f4abf19061e3b995ac

@@ -1,4 +1,4 @@
-package com.yy.yyapibackend.controller;
+package com.yy.yyapibackend.controller.common;
 
 import cn.hutool.core.io.FileUtil;
 import com.yy.yyapibackend.common.BaseResponse;

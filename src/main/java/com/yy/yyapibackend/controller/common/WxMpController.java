@@ -1,4 +1,4 @@
-package com.yy.yyapibackend.controller;
+package com.yy.yyapibackend.controller.common;
 
 import com.yy.yyapibackend.wxmp.WxMpConstant;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.yy.yyapibackend.controller;
+package com.yy.yyapibackend.controller.common;
 
 import com.yy.yyapibackend.common.BaseResponse;
 import com.yy.yyapibackend.common.ErrorCode;
