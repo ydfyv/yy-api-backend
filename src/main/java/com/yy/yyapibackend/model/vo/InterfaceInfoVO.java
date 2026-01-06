@@ -1,7 +1,7 @@
 package com.yy.yyapibackend.model.vo;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.yy.yyapibackend.model.entity.InterfaceInfo;
+import com.yy.yyapimodel.model.entity.InterfaceInfo;
 import lombok.Data;
 
 import java.util.Date;

@@ -2,7 +2,7 @@ package com.yy.yyapibackend.service;
 
 import com.yy.yyapibackend.model.entity.PostThumb;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yy.yyapibackend.model.entity.User;
+import com.yy.yyapimodel.model.entity.User;
 
 /**
  * 帖子点赞服务

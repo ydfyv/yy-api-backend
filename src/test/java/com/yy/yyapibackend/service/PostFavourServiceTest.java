@@ -3,8 +3,10 @@ package com.yy.yyapibackend.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yy.yyapibackend.model.entity.Post;
-import com.yy.yyapibackend.model.entity.User;
+
 import javax.annotation.Resource;
+
+import com.yy.yyapimodel.model.entity.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

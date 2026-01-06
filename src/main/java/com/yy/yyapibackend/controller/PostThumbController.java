@@ -5,11 +5,12 @@ import com.yy.yyapibackend.common.ErrorCode;
 import com.yy.yyapibackend.common.ResultUtils;
 import com.yy.yyapibackend.exception.BusinessException;
 import com.yy.yyapibackend.model.dto.postthumb.PostThumbAddRequest;
-import com.yy.yyapibackend.model.entity.User;
 import com.yy.yyapibackend.service.PostThumbService;
 import com.yy.yyapibackend.service.UserService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import com.yy.yyapimodel.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

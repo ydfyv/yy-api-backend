@@ -14,8 +14,6 @@ import com.yy.yyapibackend.exception.BusinessException;
 import com.yy.yyapibackend.exception.ThrowUtils;
 import com.yy.yyapibackend.mapper.UserMapper;
 import com.yy.yyapibackend.model.dto.user.UserQueryRequest;
-import com.yy.yyapibackend.model.entity.User;
-import com.yy.yyapibackend.model.enums.UserRoleEnum;
 import com.yy.yyapibackend.model.vo.LoginUserVO;
 import com.yy.yyapibackend.model.vo.UserVO;
 import com.yy.yyapibackend.service.UserService;
@@ -24,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+
+import com.yy.yyapimodel.model.entity.User;
+import com.yy.yyapimodel.model.enums.UserRoleEnum;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;

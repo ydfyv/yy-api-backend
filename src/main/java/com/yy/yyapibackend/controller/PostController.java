@@ -15,13 +15,14 @@ import com.yy.yyapibackend.model.dto.post.PostEditRequest;
 import com.yy.yyapibackend.model.dto.post.PostQueryRequest;
 import com.yy.yyapibackend.model.dto.post.PostUpdateRequest;
 import com.yy.yyapibackend.model.entity.Post;
-import com.yy.yyapibackend.model.entity.User;
 import com.yy.yyapibackend.model.vo.PostVO;
 import com.yy.yyapibackend.service.PostService;
 import com.yy.yyapibackend.service.UserService;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import com.yy.yyapimodel.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -7,10 +7,11 @@ import com.yy.yyapibackend.exception.BusinessException;
 import com.yy.yyapibackend.mapper.PostThumbMapper;
 import com.yy.yyapibackend.model.entity.Post;
 import com.yy.yyapibackend.model.entity.PostThumb;
-import com.yy.yyapibackend.model.entity.User;
 import com.yy.yyapibackend.service.PostService;
 import com.yy.yyapibackend.service.PostThumbService;
 import javax.annotation.Resource;
+
+import com.yy.yyapimodel.model.entity.User;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

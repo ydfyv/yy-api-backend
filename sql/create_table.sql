@@ -84,35 +84,13 @@ create table if not exists interface_info
     `isDelete` tinyint default 0 not null comment '是否删除'
 ) comment '接口信息' collate = utf8mb4_unicode_ci;
 
-INSERT INTO interface_info (
-    id, name, description, url, requestHeader, responseHeader, status, method, userId, createTime, updateTime, isDelete
-) VALUES
-      (1, '获取用户信息', '根据用户ID查询详细信息', 'https://api.example.com/v1/user/{id}',
-       '{"Authorization": "Bearer <token>", "Content-Type": "application/json"}',
-       '{"Content-Type": "application/json", "Cache-Control": "no-cache"}',
-       1, 'GET', 1001, NOW(), NOW(), 0),
 
-      (2, '创建订单', '提交新订单数据', 'https://api.example.com/v1/order',
-       '{"Authorization": "Bearer <token>", "Content-Type": "application/json"}',
-       '{"Content-Type": "application/json"}',
-       1, 'POST', 1002, NOW(), NOW(), 0),
-
-      (3, '删除商品', '根据商品ID软删除商品', 'https://api.example.com/v1/product/{id}',
-       '{"X-API-Key": "your-api-key"}',
-       '{"Content-Type": "application/json"}',
-       0, 'DELETE', 1001, NOW(), NOW(), 0), -- 状态为关闭
-
-      (4, '上传文件', '上传用户头像图片', 'https://api.example.com/v1/upload/avatar',
-       '{"Authorization": "Bearer <token>"}',
-       '{"Location": "/files/xxx.jpg"}',
-       1, 'POST', 1003, NOW(), NOW(), 0),
-
-      (5, '健康检查', '服务可用性探测接口', 'https://api.example.com/health',
-       NULL,
-       '{"Content-Type": "application/json"}',
-       1, 'GET', 1001, NOW(), NOW(), 0),
-
-      (6, '更新用户资料', '修改用户昵称和邮箱', 'https://api.example.com/v1/user/profile',
-       '{"Content-Type": "application/json", "X-Request-ID": "req-123"}',
-       '{"Content-Type": "application/json"}',
-       0, 'PUT', 1002, NOW(), NOW(), 1); -- 已删除（isDelete=1）
+-- 接口调用信息表
+create table if not exists interface_invoke_info
+(
+    `id`              bigint            not null comment '主键' primary key,
+    `userId`          varchar(256)      not null comment '调用用户id',
+    `interfaceInfoId` varchar(256)      null comment '接口id',
+    `count`           int     default 0 not null comment '调用次数',
+    `isDelete`        tinyint default 0 not null comment '是否删除'
+) comment '接口调用信息表' collate = utf8mb4_unicode_ci;

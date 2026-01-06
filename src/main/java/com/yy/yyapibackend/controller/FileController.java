@@ -8,13 +8,14 @@ import com.yy.yyapibackend.constant.FileConstant;
 import com.yy.yyapibackend.exception.BusinessException;
 import com.yy.yyapibackend.manager.CosManager;
 import com.yy.yyapibackend.model.dto.file.UploadFileRequest;
-import com.yy.yyapibackend.model.entity.User;
 import com.yy.yyapibackend.model.enums.FileUploadBizEnum;
 import com.yy.yyapibackend.service.UserService;
 import java.io.File;
 import java.util.Arrays;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import com.yy.yyapimodel.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.PostMapping;

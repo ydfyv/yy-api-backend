@@ -99,6 +99,12 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.yy.yyapibackend.controller
+#dubbo
+dubbo:
+  registry:
+    address: nacos://localhost:8848
+    register-mode: instance
+
 yyapi:
   client:
     accessKey: 7fbd0ed36482f8f4abf19061e3b995ac

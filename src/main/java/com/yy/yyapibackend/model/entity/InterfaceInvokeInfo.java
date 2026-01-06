@@ -1,0 +1,46 @@
+package com.yy.yyapibackend.model.entity;
+
+import com.baomidou.mybatisplus.annotation.*;
+
+import java.io.Serializable;
+
+import lombok.Data;
+
+/**
+ * 接口调用信息表
+ *
+ * @author 阿狸
+ */
+@TableName(value = "interface_invoke_info")
+@Data
+public class InterfaceInvokeInfo implements Serializable {
+    /**
+     * 主键
+     */
+    @TableId
+    private Long id;
+
+    /**
+     * 调用用户id
+     */
+    private String userId;
+
+    /**
+     * 接口id
+     */
+    private String interfaceInfoId;
+
+    /**
+     * 调用次数
+     */
+    private Integer count;
+
+    /**
+     * 是否删除
+     */
+    @TableLogic
+    private Integer isDelete;
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+}
