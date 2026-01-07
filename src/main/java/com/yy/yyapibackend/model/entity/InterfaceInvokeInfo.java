@@ -33,7 +33,17 @@ public class InterfaceInvokeInfo implements Serializable {
     /**
      * 调用次数
      */
-    private Integer count;
+    private Integer totalNum;
+
+    /**
+     * 剩余调用次数
+     */
+    private Integer leftNum;
+
+    /**
+     * 调用状态 0-正常，1-异常
+     */
+    private Integer status;
 
     /**
      * 是否删除
