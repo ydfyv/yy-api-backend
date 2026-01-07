@@ -104,6 +104,9 @@ dubbo:
   registry:
     address: nacos://localhost:8848
     register-mode: instance
+  protocol:
+    name: dubbo
+    port: 20880
 
 yyapi:
   client:
