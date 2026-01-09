@@ -12,7 +12,9 @@ import com.yy.yyapibackend.model.dto.interfaceInfo.InterfaceInfoEditRequest;
 import com.yy.yyapibackend.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
 import com.yy.yyapibackend.model.dto.interfaceInfo.InterfaceInfoUpdateRequest;
 import com.yy.yyapibackend.model.vo.InterfaceInfoVO;
+import com.yy.yyapibackend.model.vo.InterfaceInvokeVO;
 import com.yy.yyapibackend.service.InterfaceInfoService;
+import com.yy.yyapibackend.service.InterfaceInvokeInfoService;
 import com.yy.yyapibackend.service.UserService;
 import com.yy.yyapiclientsdk.client.YyApiClient;
 import com.yy.yyapimodel.model.entity.InterfaceInfo;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 接口信息
@@ -41,6 +44,9 @@ public class InterfaceInfoController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private InterfaceInvokeInfoService interfaceInvokeInfoService;
 
     @Resource
     private YyApiClient yyApiClient;
@@ -300,5 +306,18 @@ public class InterfaceInfoController {
         String result = yyApiClient.getNameByPost(user);
 
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 获取接口调用top
+     *
+     * @param top top
+     * @return 接口调用top
+     */
+    @GetMapping("/interfaceInvoke/top")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<List<InterfaceInvokeVO>> getTopInterfaceInvokeVOList(@RequestParam("top") Integer top) {
+        List<InterfaceInvokeVO> topInvokeInterface = interfaceInvokeInfoService.getTopInvokeInterface(top);
+        return ResultUtils.success(topInvokeInterface);
     }
 }

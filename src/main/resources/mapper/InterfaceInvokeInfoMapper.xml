@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yy.yyapibackend.mapper.InterfaceInvokeInfoMapper">
+    <select id="getTopInvokeInterface" resultType="com.yy.yyapibackend.model.vo.InterfaceInvokeVO">
+        select ii.name interfaceName, interfaceInfo_id, sum(total_num) invokeCount
+        from interface_invoke_info iii
+                 inner join interface_info ii on iii.interfaceInfo_id = ii.id
+        group by interfaceInfo_id limit #{top};
+    </select>
 </mapper>
