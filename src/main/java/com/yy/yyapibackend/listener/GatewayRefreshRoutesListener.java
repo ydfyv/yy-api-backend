@@ -26,7 +26,7 @@ public class GatewayRefreshRoutesListener {
     @EventListener
     public void handleContextRefresh(ContextRefreshedEvent event) {
         // 动态创建网关路由
-        List<InterfaceInfo> interfaceInfoList = interfaceInfoService.list();
+        List<InterfaceInfo> interfaceInfoList = interfaceInfoService.lambdaQuery().eq(InterfaceInfo::getStatus, 0).list();
 
         // TODO: 网关路由传参约定
         for (InterfaceInfo interfaceInfo : interfaceInfoList) {
