@@ -8,8 +8,13 @@ import com.yy.yyapibackend.mapper.InterfaceInvokeInfoMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.yy.yyapibackend.constant.CommonConstant.BASE_PATH;
+import static com.yy.yyapibackend.constant.CommonConstant.GATEWAY_URL;
 
 /**
  * @author 阿狸
@@ -30,10 +35,7 @@ public class InterfaceInvokeInfoServiceImpl extends ServiceImpl<InterfaceInvokeI
 
         long sum = topInvokeInterface.stream().map(InterfaceInvokeVO::getInvokeCount).reduce(0, Integer::sum);
 
-        return topInvokeInterface.stream().map(interfaceInvokeVO -> {
-            interfaceInvokeVO.setProportion(Double.valueOf(String.format("%.2f", (double) interfaceInvokeVO.getInvokeCount() / sum * 100)));
-            return interfaceInvokeVO;
-        }).collect(Collectors.toList());
+        return topInvokeInterface.stream().peek(interfaceInvokeVO -> interfaceInvokeVO.setProportion(Double.valueOf(String.format("%.2f", (double) interfaceInvokeVO.getInvokeCount() / sum * 100)))).collect(Collectors.toList());
     }
 }
 

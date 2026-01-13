@@ -16,6 +16,7 @@ import com.yy.yyapibackend.model.vo.InterfaceInvokeVO;
 import com.yy.yyapibackend.service.InterfaceInfoService;
 import com.yy.yyapibackend.service.InterfaceInvokeInfoService;
 import com.yy.yyapibackend.service.UserService;
+import com.yy.yyapibackend.utils.GatewayRouteUtils;
 import com.yy.yyapiclientsdk.client.YyApiClient;
 import com.yy.yyapimodel.model.entity.InterfaceInfo;
 import com.yy.yyapimodel.model.entity.User;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 接口信息
@@ -47,6 +49,9 @@ public class InterfaceInfoController {
 
     @Resource
     private InterfaceInvokeInfoService interfaceInvokeInfoService;
+
+    @Resource
+    private GatewayRouteUtils gatewayRouteUtils;
 
     @Resource
     private YyApiClient yyApiClient;
@@ -261,6 +266,9 @@ public class InterfaceInfoController {
         oldInterfaceInfo.setStatus(InterfaceStatusEnum.ONLINE.getValue());
 
         boolean result = interfaceInfoService.updateById(oldInterfaceInfo);
+        if (result) {
+            gatewayRouteUtils.deleteRoute(oldInterfaceInfo.getPath());
+        }
         return ResultUtils.success(result);
     }
 
@@ -285,6 +293,9 @@ public class InterfaceInfoController {
         oldInterfaceInfo.setStatus(InterfaceStatusEnum.OFFLINE.getValue());
 
         boolean result = interfaceInfoService.updateById(oldInterfaceInfo);
+        if (result) {
+            gatewayRouteUtils.deleteRoute(oldInterfaceInfo.getPath());
+        }
         return ResultUtils.success(result);
     }
 
@@ -319,5 +330,18 @@ public class InterfaceInfoController {
     public BaseResponse<List<InterfaceInvokeVO>> getTopInterfaceInvokeVOList(@RequestParam("top") Integer top) {
         List<InterfaceInvokeVO> topInvokeInterface = interfaceInvokeInfoService.getTopInvokeInterface(top);
         return ResultUtils.success(topInvokeInterface);
+    }
+
+    /**
+     * 获取接口open api 文档
+     *
+     * @param path 接口路径
+     * @return 接口open api 文档
+     */
+    @GetMapping("/openApiDoc")
+    @AuthCheck(mustRole = UserConstant.USER_LOGIN_STATE)
+    public BaseResponse<Map<String, Object>> getOpenApiDoc(@RequestParam("path") String path) {
+        Map<String, Object> openApiDoc = interfaceInfoService.getOpenApiDoc(path);
+        return ResultUtils.success(openApiDoc);
     }
 }

@@ -1,6 +1,7 @@
 package com.yy.yyapibackend.model.dto.interfaceInfo;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -31,19 +32,24 @@ public class InterfaceInfoEditRequest implements Serializable {
     private String description;
 
     /**
+     * 方法名称
+     */
+    private String methodName;
+
+    /**
      * 接口地址
      */
     private String url;
 
     /**
-     * 请求头
+     * 请求参数
      */
-    private String requestHeader;
+    private String requestParams;
 
     /**
-     * 响应头
+     * 响应参数
      */
-    private String responseHeader;
+    private String responseParams;
 
     /**
      * 状态（0-关闭，1-开启）

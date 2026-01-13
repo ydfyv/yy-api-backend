@@ -8,6 +8,7 @@ import com.yy.yyapibackend.model.vo.InterfaceInfoVO;
 import com.yy.yyapimodel.model.entity.InterfaceInfo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
 * @author 阿狸
@@ -23,4 +24,6 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
     Page<InterfaceInfoVO> getInterfaceInfoVOPage(Page<InterfaceInfo> interfaceInfoPage, HttpServletRequest request);
 
     void validateAccessible(InterfaceInfo interfaceInfo);
+
+    Map<String, Object> getOpenApiDoc(String path);
 }

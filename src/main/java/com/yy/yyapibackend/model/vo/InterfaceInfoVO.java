@@ -1,6 +1,8 @@
 package com.yy.yyapibackend.model.vo;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.yy.yyapimodel.model.entity.InterfaceInfo;
 import lombok.Data;
 
@@ -11,6 +13,7 @@ public class InterfaceInfoVO {
     /**
      * 主键
      */
+    @TableId
     private Long id;
 
     /**
@@ -24,27 +27,32 @@ public class InterfaceInfoVO {
     private String description;
 
     /**
+     * 方法名称
+     */
+    private String methodName;
+
+    /**
      * 接口地址
      */
-    private String url;
+    private String path;
 
     /**
-     * 请求头
+     * 请求参数
      */
-    private String requestHeader;
+    private String requestParams;
 
     /**
-     * 响应头
+     * 响应参数
      */
-    private String responseHeader;
+    private String responseParams;
 
     /**
      * 状态（0-关闭，1-开启）
      */
-    private Integer status;
+    private String status;
 
     /**
-     * 请求方法 (GET、POST。。。)
+     * 请求方法
      */
     private String method;
 
@@ -62,6 +70,12 @@ public class InterfaceInfoVO {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 是否删除
+     */
+    @TableLogic
+    private Integer isDelete;
 
     public static InterfaceInfoVO objToVo(InterfaceInfo interfaceInfo) {
         InterfaceInfoVO interfaceInfoVO = new InterfaceInfoVO();

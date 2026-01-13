@@ -16,5 +16,15 @@ public interface CommonConstant {
      * 降序
      */
     String SORT_ORDER_DESC = " descend";
-    
+
+    /**
+     * 网关地址
+     */
+    String GATEWAY_URL = "localhost:8101";
+
+    /**
+     * API基础路径
+     */
+    String BASE_PATH = "/";
+
 }

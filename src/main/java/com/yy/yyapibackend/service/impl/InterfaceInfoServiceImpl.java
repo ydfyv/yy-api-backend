@@ -1,17 +1,19 @@
 package com.yy.yyapibackend.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yy.yyapibackend.common.ErrorCode;
 import com.yy.yyapibackend.constant.CommonConstant;
+import com.yy.yyapibackend.exception.BusinessException;
 import com.yy.yyapibackend.exception.ThrowUtils;
+import com.yy.yyapibackend.mapper.InterfaceInfoMapper;
 import com.yy.yyapibackend.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
 import com.yy.yyapibackend.model.vo.InterfaceInfoVO;
 import com.yy.yyapibackend.model.vo.UserVO;
 import com.yy.yyapibackend.service.InterfaceInfoService;
-import com.yy.yyapibackend.mapper.InterfaceInfoMapper;
 import com.yy.yyapibackend.service.UserService;
 import com.yy.yyapibackend.utils.SqlUtils;
 import com.yy.yyapiclientsdk.client.YyApiClient;
@@ -27,6 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.yy.yyapibackend.constant.CommonConstant.BASE_PATH;
+
 /**
 * @author 阿狸
 */
@@ -39,17 +43,50 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
     @Resource
     private YyApiClient yyApiClient;
 
+    private static final Map<String, Object> X_OPENAPI = new HashMap<>();
+
+    static {
+        Map<String, Object> xSetting = new HashMap<>();
+        xSetting.put("language", "zh-CN");
+        xSetting.put("enableSwaggerModels", true);
+        xSetting.put("swaggerModelName", "Swagger Models");
+        xSetting.put("enableReloadCacheParameter", false);
+        xSetting.put("enableAfterScript", true);
+        xSetting.put("enableDocumentManage", true);
+        xSetting.put("enableVersion", false);
+        xSetting.put("enableRequestCache", true);
+        xSetting.put("enableFilterMultipartApis", false);
+        xSetting.put("enableFilterMultipartApiMethodType", "POST");
+        xSetting.put("enableHost", false);
+        xSetting.put("enableHostText", "");
+        xSetting.put("enableDynamicParameter", false);
+        xSetting.put("enableDebug", true);
+        xSetting.put("enableFooter", true);
+        xSetting.put("enableFooterCustom", false);
+        xSetting.put("footerCustomContent", null);
+        xSetting.put("enableSearch", true);
+        xSetting.put("enableOpenApi", true);
+        xSetting.put("enableHomeCustom", false);
+        xSetting.put("homeCustomLocation", null);
+        xSetting.put("enableGroup", true);
+        xSetting.put("enableResponseCode", true);
+
+        X_OPENAPI.put("x-markdownFiles", null);
+        X_OPENAPI.put("x-setting", xSetting);
+    }
+
     @Override
     public void validInterfaceInfo(InterfaceInfo interfaceInfo) {
-        String url = interfaceInfo.getUrl();
-        String requestHeader = interfaceInfo.getRequestHeader();
-        String responseHeader = interfaceInfo.getResponseHeader();
+
+        String path = interfaceInfo.getPath();
+        String requestParams = interfaceInfo.getRequestParams();
+        String responseParams = interfaceInfo.getResponseParams();
         String method = interfaceInfo.getMethod();
 
-        ThrowUtils.throwIf(StringUtils.isBlank(url), ErrorCode.PARAMS_ERROR, "url路径参数为空");
+        ThrowUtils.throwIf(StringUtils.isBlank(path), ErrorCode.PARAMS_ERROR, "路径参数为空");
         ThrowUtils.throwIf(StringUtils.isBlank(String.valueOf(method)), ErrorCode.PARAMS_ERROR, "请求方式参数为空");
-        ThrowUtils.throwIf(StringUtils.isBlank(requestHeader), ErrorCode.PARAMS_ERROR, "请求头参数为空");
-        ThrowUtils.throwIf(StringUtils.isBlank(responseHeader), ErrorCode.PARAMS_ERROR, "响应头参数为空");
+        ThrowUtils.throwIf(StringUtils.isBlank(requestParams), ErrorCode.PARAMS_ERROR, "请求参数为空");
+        ThrowUtils.throwIf(StringUtils.isBlank(responseParams), ErrorCode.PARAMS_ERROR, "响应参数为空");
 
         String regex = "^https?://[\\w\\-.]+(:\\d+)?(/[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=]*)?$";
 
@@ -140,11 +177,11 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
     @Override
     public void validateAccessible(InterfaceInfo interfaceInfo) {
         // TODO: 根据数据库中的url、method、requestHeader、responseHeader等信息，进行访问校验
-        String url = interfaceInfo.getUrl();
-        String requestHeader = interfaceInfo.getRequestHeader();
-        String responseHeader = interfaceInfo.getResponseHeader();
-        String status = interfaceInfo.getStatus();
-        String method = interfaceInfo.getMethod();
+//        String url = interfaceInfo.getUrl();
+//        String requestHeader = interfaceInfo.getRequestHeader();
+//        String responseHeader = interfaceInfo.getResponseHeader();
+//        String status = interfaceInfo.getStatus();
+//        String method = interfaceInfo.getMethod();
 
         com.yy.yyapiclientsdk.model.User user = new com.yy.yyapiclientsdk.model.User();
         user.setName("yy");
@@ -153,6 +190,152 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
 
         System.out.println("response: " + response);
 
+    }
+
+    @Override
+    public Map<String, Object> getOpenApiDoc(String path) {
+        InterfaceInfo interfaceInfo = lambdaQuery().eq(InterfaceInfo::getPath, path).eq(InterfaceInfo::getStatus, 0).one();
+
+        if (interfaceInfo == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口不存在！");
+        }
+
+        return buildDoc(interfaceInfo);
+    }
+
+
+    private Map<String, Object> buildDoc(InterfaceInfo interfaceInfo) {
+
+        String path = interfaceInfo.getPath();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("swagger", "2.0");
+        map.put("info", Collections.singletonMap("title", "接口文档"));
+        map.put("host", "localhost:8101");
+        map.put("schemes", Arrays.asList("http", "https"));
+        map.put("basePath", BASE_PATH);
+        map.put("tags", Collections.singletonList(Collections.singletonMap("name", path)));
+        map.put("paths", buildPath(interfaceInfo));
+        map.put("definitions", buildDefinitions(interfaceInfo));
+        map.put("x-openapi", X_OPENAPI);
+        return map;
+    }
+
+
+    private Map<String, Object> buildPath(InterfaceInfo interfaceInfo) {
+        String name = interfaceInfo.getName();
+        String description = interfaceInfo.getDescription();
+        String methodName = interfaceInfo.getMethodName();
+        String path = interfaceInfo.getPath();
+        String method = interfaceInfo.getMethod();
+
+
+        List<Map<String, Object>> parameters = new ArrayList<>();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("in", "body");
+        map.put("name", methodName);
+        map.put("description", description);
+        map.put("required", true);
+        map.put("schema", Collections.singletonMap("$ref", "#/definitions/" + methodName));
+        parameters.add(map);
+
+        Map<String, Object> methodMap = new HashMap<>();
+        methodMap.put("tags", Collections.singletonList(name));
+        methodMap.put("summary", "check");
+        methodMap.put("operationId", methodName);
+        methodMap.put("products", Collections.singletonList("*/*"));
+        methodMap.put("parameters", parameters);
+
+        Map<String, HashMap<String, Object>> responses = new HashMap<>();
+
+        HashMap<String, Object> map200 = new HashMap<>();
+        map200.put("description", "OK");
+        map200.put("schema", Collections.singletonMap("type", "string"));
+
+        HashMap<String, Object> map401 = new HashMap<>();
+        map401.put("description", "Unauthorized");
+
+        HashMap<String, Object> map403 = new HashMap<>();
+        map403.put("description", "Forbidden");
+
+        HashMap<String, Object> map404 = new HashMap<>();
+        map404.put("description", "Not Found");
+
+        responses.put("200", map200);
+        responses.put("401", map401);
+        responses.put("403", map403);
+        responses.put("404", map404);
+
+
+        methodMap.put("responses", responses);
+        methodMap.put("responsesObject", responses);
+        methodMap.put("deprecated", false);
+
+
+        Map<String, Object> pathMap = new HashMap<>();
+
+
+        Map<String, Object> httpMethodMap = new HashMap<>();
+        HttpMethodEnum methodEnum = HttpMethodEnum.getEnumByValue(method);
+        if (methodEnum == null) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "Http请求方式不存在！");
+        }
+        httpMethodMap.put(methodEnum.getMethod(), methodMap);
+
+        pathMap.put(path, httpMethodMap);
+
+        return pathMap;
+    }
+
+
+    private Map<String, Object> buildDefinitions(InterfaceInfo interfaceInfo) {
+        String methodName = interfaceInfo.getMethodName();
+        String requestParams = interfaceInfo.getRequestParams();
+        String responseParams = interfaceInfo.getResponseParams();
+
+        Map<String, Object> map = new HashMap<>();
+
+        Map<String, Object> baseResponse = new HashMap<>();
+
+        HashMap<String, Object> properties = new HashMap<>();
+
+        HashMap<String, Object> code = new HashMap<>();
+        code.put("type", "integer");
+        code.put("format", "int32");
+
+        // 需取定义一个响应对象
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("type", "object");
+        responseMap.put("properties", JSON.parseObject(responseParams, Map.class));
+        responseMap.put("title", methodName + "_Response");
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("$ref", "#/definitions/" + methodName + "_Response");
+//        data.put("originalRef", methodName);
+
+        HashMap<String, Object> message = new HashMap<>();
+        message.put("type", "string");
+
+        properties.put("code", code);
+        properties.put("data", data);
+        properties.put("message", message);
+
+        baseResponse.put("type", "object");
+        baseResponse.put("properties", properties);
+        baseResponse.put("title", "BaseResponse<<" + methodName + ">>");
+
+        map.put("BaseResponse<<" + methodName + ">>", baseResponse);
+
+        Map<String, Object> methodObj = new HashMap<>();
+        methodObj.put("type", "object");
+        methodObj.put("properties", JSON.parseObject(requestParams, Map.class));
+        methodObj.put("title", methodName);
+
+        map.put(methodName, methodObj);
+        map.put(methodName + "_Response", responseMap);
+
+        return map;
     }
 }
 

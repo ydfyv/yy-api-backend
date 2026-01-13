@@ -1,10 +1,13 @@
 package com.yy.yyapibackend.model.dto.interfaceInfo;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.yy.yyapibackend.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 查询请求
@@ -29,6 +32,11 @@ public class InterfaceInfoQueryRequest extends PageRequest implements Serializab
      * 描述
      */
     private String description;
+
+    /**
+     * 方法名称
+     */
+    private String methodName;
 
     /**
      * 接口地址

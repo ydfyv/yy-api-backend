@@ -13,7 +13,3 @@ import java.util.List;
 public interface InterfaceInvokeInfoMapper extends BaseMapper<InterfaceInvokeInfo> {
     List<InterfaceInvokeVO> getTopInvokeInterface(@Param("top") Integer top);
 }
-
-
-
-
