@@ -1,11 +1,8 @@
 package com.yy.yyapibackend.model.dto.interfaceInfo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 创建请求
@@ -33,7 +30,17 @@ public class InterfaceInfoAddRequest implements Serializable {
     /**
      * 接口地址
      */
-    private String url;
+    private String path;
+
+    /**
+     * 服务地址
+     */
+    private String serverUri;
+
+    /**
+     * 转发匹配路径
+     */
+    private String transPattern;
 
     /**
      * 请求参数
@@ -44,6 +51,11 @@ public class InterfaceInfoAddRequest implements Serializable {
      * 响应参数
      */
     private String responseParams;
+
+    /**
+     * 状态（0-关闭，1-开启）
+     */
+    private String status;
 
     /**
      * 请求方法

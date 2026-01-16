@@ -20,7 +20,7 @@ public interface CommonConstant {
     /**
      * 网关地址
      */
-    String GATEWAY_URL = "localhost:8101";
+    String GATEWAY_URL = "localhost:8012";
 
     /**
      * API基础路径

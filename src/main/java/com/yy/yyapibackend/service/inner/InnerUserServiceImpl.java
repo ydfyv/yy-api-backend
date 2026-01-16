@@ -30,4 +30,13 @@ public class InnerUserServiceImpl implements InnerUserService {
         String sign = SignUtils.sign(secretKey, body);
         return sign.equals(signed);
     }
+
+    @Override
+    public String getSecretKey(String accessKey) {
+        User user = userService.lambdaQuery().eq(User::getAccessKey, accessKey).one();
+        if (user == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "accessKey错误");
+        }
+        return user.getSecretKey();
+    }
 }

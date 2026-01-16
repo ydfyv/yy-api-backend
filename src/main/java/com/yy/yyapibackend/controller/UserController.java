@@ -321,6 +321,7 @@ public class UserController {
      * @param idRequest
      * @return
      */
+    @AuthCheck(mustRole = UserConstant.USER_LOGIN_STATE)
     @PostMapping("/update/secretKey")
     public BaseResponse<Boolean> updateSecretKey(@RequestBody IdRequest idRequest) {
         if (idRequest == null || idRequest.getId() == null) {
@@ -328,5 +329,13 @@ public class UserController {
         }
         userService.updateSecretKey(idRequest.getId());
         return ResultUtils.success(true);
+    }
+
+    @PostMapping("/test")
+    public BaseResponse<User> test() {
+        User user = new User();
+        user.setUserName("1234");
+        user.setUserAccount("阿狸");
+        return ResultUtils.success(user);
     }
 }

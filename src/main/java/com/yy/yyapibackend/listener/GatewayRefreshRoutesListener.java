@@ -26,11 +26,13 @@ public class GatewayRefreshRoutesListener {
     @EventListener
     public void handleContextRefresh(ContextRefreshedEvent event) {
         // 动态创建网关路由
-        List<InterfaceInfo> interfaceInfoList = interfaceInfoService.lambdaQuery().eq(InterfaceInfo::getStatus, 0).list();
+        List<InterfaceInfo> interfaceInfoList = interfaceInfoService.lambdaQuery().eq(InterfaceInfo::getStatus, 1).list();
 
-        // TODO: 网关路由传参约定
         for (InterfaceInfo interfaceInfo : interfaceInfoList) {
-            gatewayRouteUtils.addRoute(interfaceInfo.getPath());
+            String methodName = interfaceInfo.getMethodName();
+            String serverUri = interfaceInfo.getServerUri();
+            String transPattern = interfaceInfo.getTransPattern();
+            gatewayRouteUtils.addRoute(methodName, serverUri, transPattern);
         }
     }
 }

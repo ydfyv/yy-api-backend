@@ -19,7 +19,7 @@ import java.util.Date;
 public class InterfaceInfoQueryRequest extends PageRequest implements Serializable {
 
     /**
-     * 主键
+     * id
      */
     private Long id;
 
@@ -41,7 +41,27 @@ public class InterfaceInfoQueryRequest extends PageRequest implements Serializab
     /**
      * 接口地址
      */
-    private String url;
+    private String path;
+
+    /**
+     * 服务地址
+     */
+    private String serverUri;
+
+    /**
+     * 转发匹配路径
+     */
+    private String transPattern;
+
+    /**
+     * 请求参数
+     */
+    private String requestParams;
+
+    /**
+     * 响应参数
+     */
+    private String responseParams;
 
     /**
      * 状态（0-关闭，1-开启）

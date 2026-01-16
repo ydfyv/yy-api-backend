@@ -28,29 +28,51 @@ public class InterfaceInfoUpdateRequest implements Serializable {
     private String description;
 
     /**
+     * 方法名称
+     */
+    private String methodName;
+
+    /**
      * 接口地址
      */
-    private String url;
+    private String path;
 
     /**
-     * 请求头
+     * 服务地址
      */
-    private String requestHeader;
+    private String serverUri;
 
     /**
-     * 响应头
+     * 转发匹配路径
      */
-    private String responseHeader;
+    private String transPattern;
+
+    /**
+     * 请求参数
+     */
+    private String requestParams;
+
+    /**
+     * 响应参数
+     */
+    private String responseParams;
 
     /**
      * 状态（0-关闭，1-开启）
      */
-    private Integer status;
+    private String status;
 
     /**
      * 请求方法
      */
-    private Integer method;
+    private String method;
+
+    /**
+     * 创建用户 id
+     */
+    private Long userId;
+
+
 
     private static final long serialVersionUID = 1L;
 }

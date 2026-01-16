@@ -113,28 +113,3 @@ create table if not exists interface_invoke_info
     `isDelete`        tinyint default 0 not null comment '是否删除'
 ) comment '接口调用信息表' collate = utf8mb4_unicode_ci;
 
-INSERT INTO interface_info (id, name, description, methodName, url, method,
-                            requestParams, responseParams, status, userId,
-                            createTime, updateTime, isDelete)
-VALUES (1001, '获取用户信息', '根据用户ID获取详细信息', 'getUserById', '/api/user/get', 'GET',
-        '{"userId": "Long"}', '{"code": "Integer", "message": "String", "data": {"id": "Long", "name": "String"}}', 1,
-        101,
-        NOW(), NOW(), 0),
-
-       (1002, '创建订单', '提交新订单信息', 'createOrder', '/api/order/create', 'POST',
-        '{"userId": "Long", "items": "List<Item>", "totalAmount": "BigDecimal"}',
-        '{"code": "Integer", "message": "String", "orderId": "String"}', 1, 102,
-        NOW() - INTERVAL 2 DAY, NOW() - INTERVAL 1 HOUR, 0),
-
-       (1003, '删除商品', '根据商品ID逻辑删除商品', 'deleteProduct', '/api/product/delete', 'DELETE',
-        '{"productId": "Long"}', '{"code": "Integer", "message": "String"}', 0, 103,
-        NOW() - INTERVAL 5 DAY, NOW() - INTERVAL 3 DAY, 0),
-
-       (1004, '查询天气', '根据城市名查询当前天气', 'getWeather', '/api/weather/query', 'GET',
-        '{"city": "String"}', '{"code": "Integer", "message": "String", "weather": "String", "temperature": "Double"}',
-        1, 101,
-        NOW() - INTERVAL 1 WEEK, NOW(), 0),
-
-       (1005, '更新用户头像', '上传并更新用户头像URL', 'updateAvatar', '/api/user/avatar', 'PUT',
-        '{"userId": "Long", "avatarUrl": "String"}', '{"code": "Integer", "message": "String"}', 1, 104,
-        NOW() - INTERVAL 3 HOUR, NOW(), 1);

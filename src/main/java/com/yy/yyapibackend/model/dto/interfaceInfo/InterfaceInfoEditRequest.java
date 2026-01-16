@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 编辑请求
@@ -15,7 +14,6 @@ import java.util.List;
  */
 @Data
 public class InterfaceInfoEditRequest implements Serializable {
-
     /**
      * 主键
      */
@@ -39,7 +37,17 @@ public class InterfaceInfoEditRequest implements Serializable {
     /**
      * 接口地址
      */
-    private String url;
+    private String path;
+
+    /**
+     * 服务地址
+     */
+    private String serverUri;
+
+    /**
+     * 转发匹配路径
+     */
+    private String transPattern;
 
     /**
      * 请求参数

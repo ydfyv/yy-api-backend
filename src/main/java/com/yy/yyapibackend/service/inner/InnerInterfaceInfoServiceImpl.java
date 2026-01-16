@@ -30,7 +30,24 @@ public class InnerInterfaceInfoServiceImpl implements InnerInterfaceInfoService 
 
     @Override
     public boolean validateInterfaceAccess(String path, String method) {
-        InterfaceInfo interfaceInfo = interfaceInfoService.lambdaQuery().eq(InterfaceInfo::getUrl, path).eq(InterfaceInfo::getMethod, method).one();
+
+        int firstFlash = path.indexOf("/");
+
+        if (firstFlash == -1) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的路径");
+        }
+
+        int secondFlash = path.indexOf("/", firstFlash + 1);
+
+        if (secondFlash == -1) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的路径");
+        }
+
+        String subPath = path.substring(secondFlash);
+
+        InterfaceInfo interfaceInfo = interfaceInfoService.lambdaQuery()
+                .eq(InterfaceInfo::getPath, subPath)
+                .eq(InterfaceInfo::getMethod, method).eq(InterfaceInfo::getStatus, 1).one();
         if (interfaceInfo == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的路径和请求方法");
         }
@@ -48,7 +65,25 @@ public class InnerInterfaceInfoServiceImpl implements InnerInterfaceInfoService 
         if (user == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的accessKey");
         }
-        InterfaceInfo interfaceInfo = interfaceInfoService.lambdaQuery().eq(InterfaceInfo::getUrl, path).eq(InterfaceInfo::getStatus, 1).one();
+
+        int firstFlash = path.indexOf("/");
+
+        if (firstFlash == -1) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的路径");
+        }
+
+        int secondFlash = path.indexOf("/", firstFlash + 1);
+
+        if (secondFlash == -1) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的路径");
+        }
+
+        String subPath = path.substring(secondFlash);
+
+        InterfaceInfo interfaceInfo = interfaceInfoService.lambdaQuery()
+                .eq(InterfaceInfo::getPath, subPath)
+                .eq(InterfaceInfo::getStatus, 1)
+                .one();
         if (interfaceInfo == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的路径");
         }

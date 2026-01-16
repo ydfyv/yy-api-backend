@@ -30,6 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yy.yyapibackend.constant.CommonConstant.BASE_PATH;
+import static com.yy.yyapibackend.constant.CommonConstant.GATEWAY_URL;
 
 /**
 * @author 阿狸
@@ -111,7 +112,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         Long id = interfaceInfoQueryRequest.getId();
         String name = interfaceInfoQueryRequest.getName();
         String description = interfaceInfoQueryRequest.getDescription();
-        String url = interfaceInfoQueryRequest.getUrl();
+        String serverUri = interfaceInfoQueryRequest.getServerUri();
         String status = interfaceInfoQueryRequest.getStatus();
         String method = interfaceInfoQueryRequest.getMethod();
         Long userId = interfaceInfoQueryRequest.getUserId();
@@ -121,7 +122,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         // 拼接查询条件
         queryWrapper.like(ObjectUtils.isNotEmpty(name), "name", name);
         queryWrapper.like(ObjectUtils.isNotEmpty(description), "description", description);
-        queryWrapper.like(ObjectUtils.isNotEmpty(url), "url", url);
+        queryWrapper.like(ObjectUtils.isNotEmpty(serverUri), "serverUri", serverUri);
         queryWrapper.eq(ObjectUtils.isNotEmpty(status), "status", status);
         queryWrapper.eq(ObjectUtils.isNotEmpty(method), "method", method);
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
@@ -183,18 +184,18 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
 //        String status = interfaceInfo.getStatus();
 //        String method = interfaceInfo.getMethod();
 
-        com.yy.yyapiclientsdk.model.User user = new com.yy.yyapiclientsdk.model.User();
-        user.setName("yy");
-
-        String response = yyApiClient.getNameByPost(user);
-
-        System.out.println("response: " + response);
+//        com.yy.yyapiclientsdk.model.User user = new com.yy.yyapiclientsdk.model.User();
+//        user.setName("yy");
+//
+//        String response = yyApiClient.getNameByPost(user);
+//
+//        System.out.println("response: " + response);
 
     }
 
     @Override
     public Map<String, Object> getOpenApiDoc(String path) {
-        InterfaceInfo interfaceInfo = lambdaQuery().eq(InterfaceInfo::getPath, path).eq(InterfaceInfo::getStatus, 0).one();
+        InterfaceInfo interfaceInfo = lambdaQuery().eq(InterfaceInfo::getPath, path).eq(InterfaceInfo::getStatus, 1).one();
 
         if (interfaceInfo == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口不存在！");
@@ -211,8 +212,8 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         Map<String, Object> map = new HashMap<>();
         map.put("swagger", "2.0");
         map.put("info", Collections.singletonMap("title", "接口文档"));
-        map.put("host", "localhost:8101");
-        map.put("schemes", Arrays.asList("http", "https"));
+        map.put("host", GATEWAY_URL);
+        map.put("schemes", Collections.singletonList("http"));
         map.put("basePath", BASE_PATH);
         map.put("tags", Collections.singletonList(Collections.singletonMap("name", path)));
         map.put("paths", buildPath(interfaceInfo));
@@ -228,6 +229,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         String methodName = interfaceInfo.getMethodName();
         String path = interfaceInfo.getPath();
         String method = interfaceInfo.getMethod();
+        String transPattern = interfaceInfo.getTransPattern();
 
 
         List<Map<String, Object>> parameters = new ArrayList<>();
@@ -283,7 +285,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         }
         httpMethodMap.put(methodEnum.getMethod(), methodMap);
 
-        pathMap.put(path, httpMethodMap);
+        pathMap.put(transPattern + path, httpMethodMap);
 
         return pathMap;
     }

@@ -14,15 +14,19 @@ public class GatewayRouteUtils {
     @DubboReference
     private DynamicRouteService dynamicRouteService;
 
-    public void addRoute(String path) {
-        dynamicRouteService.addRoute(path);
+    public void addRoute(String methodName, String uri, String pattern) {
+        dynamicRouteService.addRoute(methodName, uri, pattern);
     }
 
-    public void deleteRoute(String routeId) {
-        dynamicRouteService.deleteRoute(routeId);
+    public void deleteRoute(String methodName) {
+        dynamicRouteService.deleteRoute(methodName);
     }
 
-    public void updateRoute(String routeId, String uri) {
-        dynamicRouteService.updateRoute(routeId, uri);
+    public void updateRoute(String methodName, String uri, String pattern) {
+        dynamicRouteService.updateRoute(methodName, uri, pattern);
+    }
+
+    public void deleteAllRoute() {
+        dynamicRouteService.deleteAllRoute();
     }
 }
