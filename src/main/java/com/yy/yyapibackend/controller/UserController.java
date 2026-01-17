@@ -225,8 +225,8 @@ public class UserController {
      */
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<User> getUserById(long id, HttpServletRequest request) {
-        if (id <= 0) {
+    public BaseResponse<User> getUserById(Long id, HttpServletRequest request) {
+        if (id == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User user = userService.getById(id);
@@ -242,7 +242,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<UserVO> getUserVOById(long id, HttpServletRequest request) {
+    public BaseResponse<UserVO> getUserVOById(Long id, HttpServletRequest request) {
         BaseResponse<User> response = getUserById(id, request);
         User user = response.getData();
         return ResultUtils.success(userService.getUserVO(user));
@@ -332,10 +332,20 @@ public class UserController {
     }
 
     @PostMapping("/test")
-    public BaseResponse<User> test() {
-        User user = new User();
-        user.setUserName("1234");
-        user.setUserAccount("阿狸");
+    public BaseResponse<User> test(@RequestBody User user, HttpServletRequest request) {
+        String accessKey = request.getHeader("accessKey");
+        String timestamp = request.getHeader("timestamp");
+        String sign = request.getHeader("sign");
+        System.out.println(accessKey + "=======" + timestamp + "=======" + sign);
         return ResultUtils.success(user);
+    }
+
+    @GetMapping("/test2")
+    public BaseResponse<?> test2(Long id, HttpServletRequest request) {
+        String accessKey = request.getHeader("accessKey");
+        String timestamp = request.getHeader("timestamp");
+        String sign = request.getHeader("sign");
+        System.out.println(accessKey + "=======" + timestamp + "=======" + sign);
+        return ResultUtils.success(id);
     }
 }

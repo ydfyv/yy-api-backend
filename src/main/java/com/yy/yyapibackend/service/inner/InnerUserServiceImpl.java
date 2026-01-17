@@ -21,13 +21,14 @@ public class InnerUserServiceImpl implements InnerUserService {
     private UserService userService;
 
     @Override
-    public boolean isAccessible(String accessKey, String body, String signed) {
+    public boolean isAccessible(String accessKey, String path, String method, String signed) {
+
         User user = userService.lambdaQuery().eq(User::getAccessKey, accessKey).one();
         if (user == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "accessKey错误");
         }
         String secretKey = user.getSecretKey();
-        String sign = SignUtils.sign(secretKey, body);
+        String sign = SignUtils.sign(secretKey, path, method);
         return sign.equals(signed);
     }
 

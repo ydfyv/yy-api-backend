@@ -122,14 +122,13 @@
         <dependency>
             <groupId>io.github.ydfyv</groupId>
             <artifactId>yyapi-client-sdk</artifactId>
-            <version>0.0.2</version>
-            <scope>compile</scope>
+            <version>0.0.4</version>
         </dependency>
         <!--yy api common-->
         <dependency>
-            <groupId>com.yy</groupId>
+            <groupId>io.github.ydfyv</groupId>
             <artifactId>yy-api-common</artifactId>
-            <version>1.0</version>
+            <version>0.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.yy</groupId>

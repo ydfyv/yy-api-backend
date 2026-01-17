@@ -311,26 +311,6 @@ public class InterfaceInfoController {
     }
 
     /**
-     * 调试接口
-     *
-     * @param jsonStr
-     * @return
-     */
-    @PostMapping("/debugInterface")
-    @AuthCheck(mustRole = UserConstant.USER_LOGIN_STATE)
-    public BaseResponse<String> debugInterface(@RequestBody String jsonStr) {
-        if (jsonStr == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-
-        Gson gson = new Gson();
-        com.yy.yyapiclientsdk.model.User user = gson.fromJson(jsonStr, com.yy.yyapiclientsdk.model.User.class);
-        String result = yyApiClient.getNameByPost(user);
-
-        return ResultUtils.success(result);
-    }
-
-    /**
      * 获取接口调用top
      *
      * @param top top
