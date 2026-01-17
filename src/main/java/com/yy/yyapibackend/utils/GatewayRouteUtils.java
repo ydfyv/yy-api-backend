@@ -26,7 +26,4 @@ public class GatewayRouteUtils {
         dynamicRouteService.updateRoute(methodName, uri, pattern);
     }
 
-    public void deleteAllRoute() {
-        dynamicRouteService.deleteAllRoute();
-    }
 }

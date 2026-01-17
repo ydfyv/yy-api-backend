@@ -2,6 +2,7 @@ package com.yy.yyapibackend.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -232,17 +233,35 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         String path = interfaceInfo.getPath();
         String method = interfaceInfo.getMethod();
         String transPattern = interfaceInfo.getTransPattern();
+        String requestParams = interfaceInfo.getRequestParams();
 
 
         List<Map<String, Object>> parameters = new ArrayList<>();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("in", "body");
-        map.put("name", methodName);
-        map.put("description", description);
-        map.put("required", true);
-        map.put("schema", Collections.singletonMap("$ref", "#/definitions/" + methodName));
-        parameters.add(map);
+        if ("POST".equals(method)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("in", "body");
+            map.put("name", methodName);
+            map.put("description", description);
+            map.put("required", true);
+            map.put("schema", Collections.singletonMap("$ref", "#/definitions/" + methodName));
+            parameters.add(map);
+        } else if ("GET".equals(method)) {
+            Map<String, Object> params;
+            try {
+                params = JSON.parseObject(requestParams, Map.class);
+            } catch (Exception e) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "数据库requestParams格式错误！");
+            }
+            // 参数名：参数类型  例： name: string
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("in", "query");
+                map.put("name", entry.getKey());
+                map.put("type", entry.getValue());
+                parameters.add(map);
+            }
+        }
 
         Map<String, Object> methodMap = new HashMap<>();
         methodMap.put("tags", Collections.singletonList(name));

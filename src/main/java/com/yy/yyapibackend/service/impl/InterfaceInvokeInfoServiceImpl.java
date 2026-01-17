@@ -39,6 +39,10 @@ public class InterfaceInvokeInfoServiceImpl extends ServiceImpl<InterfaceInvokeI
 
         long sum = topInvokeInterface.stream().map(InterfaceInvokeVO::getInvokeCount).reduce(0, Integer::sum);
 
+        if (sum == 0) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "没有接口调用数据！");
+        }
+
         return topInvokeInterface.stream().peek(interfaceInvokeVO -> interfaceInvokeVO.setProportion(Double.valueOf(String.format("%.2f", (double) interfaceInvokeVO.getInvokeCount() / sum * 100)))).collect(Collectors.toList());
     }
 }
