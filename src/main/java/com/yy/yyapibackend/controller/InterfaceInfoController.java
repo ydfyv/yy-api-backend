@@ -13,6 +13,7 @@ import com.yy.yyapibackend.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
 import com.yy.yyapibackend.model.dto.interfaceInfo.InterfaceInfoUpdateRequest;
 import com.yy.yyapibackend.model.vo.InterfaceInfoVO;
 import com.yy.yyapibackend.model.vo.InterfaceInvokeVO;
+import com.yy.yyapibackend.publish.InterfaceOnlinePublisher;
 import com.yy.yyapibackend.service.InterfaceInfoService;
 import com.yy.yyapibackend.service.InterfaceInvokeInfoService;
 import com.yy.yyapibackend.service.UserService;
@@ -55,6 +56,9 @@ public class InterfaceInfoController {
 
     @Resource
     private YyApiClient yyApiClient;
+
+    @Resource
+    private InterfaceOnlinePublisher interfaceOnlinePublisher;
 
     // region 增删改查
 
@@ -266,9 +270,16 @@ public class InterfaceInfoController {
         oldInterfaceInfo.setStatus(InterfaceStatusEnum.ONLINE.getValue());
 
         boolean result = interfaceInfoService.updateById(oldInterfaceInfo);
+
+        String methodName = oldInterfaceInfo.getMethodName();
+        String serverUri = oldInterfaceInfo.getServerUri();
+        String transPattern = oldInterfaceInfo.getTransPattern();
+
         if (result) {
-            gatewayRouteUtils.deleteRoute(oldInterfaceInfo.getPath());
+            gatewayRouteUtils.addRoute(methodName, serverUri, transPattern);
         }
+
+        interfaceOnlinePublisher.publish(oldInterfaceInfo.getId());
         return ResultUtils.success(result);
     }
 
@@ -294,7 +305,7 @@ public class InterfaceInfoController {
 
         boolean result = interfaceInfoService.updateById(oldInterfaceInfo);
         if (result) {
-            gatewayRouteUtils.deleteRoute(oldInterfaceInfo.getPath());
+            gatewayRouteUtils.deleteRoute(oldInterfaceInfo.getMethodName());
         }
         return ResultUtils.success(result);
     }

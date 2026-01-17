@@ -22,6 +22,7 @@ import com.yy.yyapimodel.model.entity.User;
 import com.yy.yyapimodel.model.enums.HttpMethodEnum;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,6 +40,7 @@ import static com.yy.yyapibackend.constant.CommonConstant.GATEWAY_URL;
 public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, InterfaceInfo> implements InterfaceInfoService{
 
     @Resource
+    @Lazy
     private UserService userService;
 
     @Resource

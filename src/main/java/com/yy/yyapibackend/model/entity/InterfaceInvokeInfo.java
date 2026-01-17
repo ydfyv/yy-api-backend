@@ -23,12 +23,12 @@ public class InterfaceInvokeInfo implements Serializable {
     /**
      * 调用用户id
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 接口id
      */
-    private String interfaceInfoId;
+    private Long interfaceInfoId;
 
     /**
      * 调用次数

@@ -14,15 +14,20 @@ import com.yy.yyapibackend.exception.BusinessException;
 import com.yy.yyapibackend.exception.ThrowUtils;
 import com.yy.yyapibackend.mapper.UserMapper;
 import com.yy.yyapibackend.model.dto.user.UserQueryRequest;
+import com.yy.yyapibackend.model.entity.InterfaceInvokeInfo;
 import com.yy.yyapibackend.model.vo.LoginUserVO;
 import com.yy.yyapibackend.model.vo.UserVO;
+import com.yy.yyapibackend.service.InterfaceInfoService;
+import com.yy.yyapibackend.service.InterfaceInvokeInfoService;
 import com.yy.yyapibackend.service.UserService;
 import com.yy.yyapibackend.utils.SqlUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.yy.yyapimodel.model.entity.InterfaceInfo;
 import com.yy.yyapimodel.model.entity.User;
 import com.yy.yyapimodel.model.enums.UserRoleEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +50,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 盐值，混淆密码
      */
     public static final String SALT = "yy";
+
+    @Resource
+    private InterfaceInfoService interfaceInfoService;
+
+    @Resource
+    private InterfaceInvokeInfoService interfaceInvokeInfoService;
 
     @Override
     public long userRegister(String userName, String userAccount, String userPassword, String checkPassword) {
@@ -87,6 +98,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
             }
+            // 注册用户每个接口生成50次的调用次数
+            List<InterfaceInfo> list = interfaceInfoService.lambdaQuery().eq(InterfaceInfo::getStatus, 1).list();
+            List<InterfaceInvokeInfo> interfaceInvokeInfoList = new ArrayList<>();
+            for (InterfaceInfo interfaceInfo : list) {
+                InterfaceInvokeInfo interfaceInvokeInfo = new InterfaceInvokeInfo();
+                interfaceInvokeInfo.setUserId(user.getId());
+                interfaceInvokeInfo.setInterfaceInfoId(interfaceInfo.getId());
+                interfaceInvokeInfo.setLeftNum(50);
+                interfaceInvokeInfoList.add(interfaceInvokeInfo);
+            }
+            interfaceInvokeInfoService.saveBatch(interfaceInvokeInfoList);
             return user.getId();
         }
     }
